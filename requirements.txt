@@ -1,0 +1,37 @@
+pandas
+numpy
+seaborn
+matplotlib
+scipy
+scikit-learn
+
+#Importação de bibliotecas
+#import pandas as pd
+#import numpy as np
+#import seaborn as sns
+#from matplotlib import pyplot as plt
+#import scipy.optimize as opt
+     
+#from sklearn.metrics import (
+#    accuracy_score,
+#    precision_score,
+#    recall_score,
+#    f1_score,
+#    confusion_matrix,
+#    classification_report
+#)
+
+
+#tcc_anomalia_rede/
+#│
+#├── data/
+#│   ├── KDDTrain+.txt
+#│   └── KDDTest+.txt
+#│
+#├── main.py               ← orquestra tudo (chama os módulos)
+#├── preprocessamento.py   ← limpeza e preparação (seu código atual)
+#├── random_forest.py      ← modelo supervisionado
+#├── isolation_forest.py   ← modelo não supervisionado
+#├── modelo_hibrido.py     ← combinação dos dois
+#├── avaliacao.py          ← métricas, gráficos, relatório
+#└── resultados/           ← pasta para salvar gráficos e outputs

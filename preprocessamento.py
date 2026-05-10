@@ -1,0 +1,97 @@
+# preprocessamento.py
+
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import LabelEncoder, StandardScaler
+from sklearn.model_selection import train_test_split
+
+def carregar_e_preparar(test_size=0.2, random_state=42):
+
+    colunas = [
+        "duration","protocol_type","service","flag","src_bytes","dst_bytes","land",
+        "wrong_fragment","urgent","hot","num_failed_logins","logged_in","num_compromised",
+        "root_shell","su_attempted","num_root","num_file_creations","num_shells",
+        "num_access_files","num_outbound_cmds","is_host_login","is_guest_login",
+        "count","srv_count","serror_rate","srv_serror_rate","rerror_rate","srv_rerror_rate",
+        "same_srv_rate","diff_srv_rate","srv_diff_host_rate","dst_host_count",
+        "dst_host_srv_count","dst_host_same_srv_rate","dst_host_diff_srv_rate",
+        "dst_host_same_src_port_rate","dst_host_srv_diff_host_rate",
+        "dst_host_serror_rate","dst_host_srv_serror_rate","dst_host_rerror_rate",
+        "dst_host_srv_rerror_rate",
+        "classe",       # rótulo real (normal, neptune, smurf...)
+        "dificuldade"   # coluna extra do NSL-KDD — não é feature
+    ]
+
+    # ======================================
+    # 1. CARREGAR DADOS
+    # ======================================
+    treino = pd.read_csv("data/KDDTrain+.txt", names=colunas)
+    teste  = pd.read_csv("data/KDDTest+.txt",  names=colunas)
+    dados  = pd.concat([treino, teste], ignore_index=True)
+
+    print(f"Dataset carregado: {dados.shape}")
+
+    # ======================================
+    # 2. DIAGNÓSTICO DA COLUNA CLASSE
+    # ======================================
+    print("\nValores únicos na coluna classe:")
+    print(sorted(dados["classe"].unique()))
+
+    # ======================================
+    # 3. EXTRAIR RÓTULO — ANTES DE QUALQUER ENCODING
+    # ======================================
+    y = dados["classe"].apply(
+        lambda x: 0 if str(x).strip().lower() == "normal" else 1
+    )
+
+    print("\nDistribuição das classes:")
+    print(y.value_counts())
+    print(f"Normal: {sum(y==0)} | Ataque: {sum(y==1)}")
+
+    # ======================================
+    # 4. SEPARAR FEATURES
+    # ======================================
+    X = dados.drop(["classe", "dificuldade"], axis=1)
+
+    # ======================================
+    # 5. ENCODING DAS COLUNAS CATEGÓRICAS
+    # ======================================
+    for coluna in X.columns:
+        if X[coluna].dtype == 'object':
+            encoder = LabelEncoder()
+            X[coluna] = encoder.fit_transform(X[coluna])
+
+    colunas_texto = X.dtypes[X.dtypes == 'object']
+    if len(colunas_texto) > 0:
+        print("  Colunas ainda em texto:", list(colunas_texto.index))
+    else:
+        print("\n Todas as colunas convertidas para numérico.")
+
+    # ======================================
+    # 6. SALVAR NOMES DAS FEATURES
+    # ======================================
+    feature_names = list(X.columns)
+
+    # ======================================
+    # 7. NORMALIZAÇÃO
+    # ======================================
+    scaler = StandardScaler()
+    X = scaler.fit_transform(X)
+
+    print(" Normalização concluída.")
+
+    # ======================================
+    # 8. DIVISÃO TREINO / TESTE
+    # ======================================
+    X_treino, X_teste, y_treino, y_teste = train_test_split(
+        X, y,
+        test_size=test_size,
+        random_state=random_state,
+        stratify=y      # mantém proporção de classes nos dois conjuntos
+    )
+
+    print(f"\nTreino: {X_treino.shape} | Teste: {X_teste.shape}")
+    print(f"Distribuição treino — Normal: {sum(y_treino==0)} | Ataque: {sum(y_treino==1)}")
+    print(f"Distribuição teste  — Normal: {sum(y_teste==0)}  | Ataque: {sum(y_teste==1)}")
+
+    return X_treino, X_teste, y_treino, y_teste, feature_names
