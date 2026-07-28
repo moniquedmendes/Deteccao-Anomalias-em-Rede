@@ -34,7 +34,7 @@ def treinar_isolation_forest(X_treino, X_teste, y_teste,
     """
 
     print("=" * 50)
-    print("ISOLATION FOREST — NSL-KDD")
+    print("ISOLATION FOREST * NSL-KDD")
     print("=" * 50)
 
     # ======================================
@@ -64,7 +64,7 @@ def treinar_isolation_forest(X_treino, X_teste, y_teste,
     predicoes_raw = modelo.predict(X_teste)
     y_pred = np.where(predicoes_raw == 1, 0, 1)
 
-    # Escore de anomalia bruto — quanto menor, mais anômalo
+    # Escore de anomalia bruto, quanto menor, mais anômalo
     # Valores negativos indicam anomalia
     escores = modelo.score_samples(X_teste)
 

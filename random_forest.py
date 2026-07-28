@@ -19,7 +19,7 @@ def treinar_random_forest(X_treino, X_teste, y_treino, y_teste,
                            n_estimators=100, random_state=42):
 
     print("=" * 50)
-    print("RANDOM FOREST — NSL-KDD")
+    print("RANDOM FOREST * NSL-KDD")
     print("=" * 50)
 
     modelo = RandomForestClassifier(
