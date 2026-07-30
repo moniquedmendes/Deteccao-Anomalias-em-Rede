@@ -58,7 +58,7 @@ def treinar_random_forest(X_treino, X_teste, y_treino, y_teste,
 
 
 # ======================================
-# GRÁFICO — MATRIZ DE CONFUSÃO
+# GRÁFICO - MATRIZ DE CONFUSÃO
 # ======================================
 
 def plotar_matriz_confusao(y_teste, y_pred, nome_modelo="Modelo"):
@@ -69,7 +69,7 @@ def plotar_matriz_confusao(y_teste, y_pred, nome_modelo="Modelo"):
     sns.heatmap(cm, annot=True, fmt="d", cmap="Blues",
                 xticklabels=["Normal", "Ataque"],
                 yticklabels=["Normal", "Ataque"])
-    plt.title(f"Matriz de Confusão — {nome_modelo}")
+    plt.title(f"Matriz de Confusão - {nome_modelo}")
     plt.xlabel("Classe Prevista")
     plt.ylabel("Classe Real")
     plt.tight_layout()
@@ -82,7 +82,7 @@ def plotar_matriz_confusao(y_teste, y_pred, nome_modelo="Modelo"):
 
 
 # ======================================
-# GRÁFICO — IMPORTÂNCIA DAS FEATURES
+# GRÁFICO - IMPORTÂNCIA DAS FEATURES
 # ======================================
 
 def plotar_importancia_features(modelo, feature_names=None, n_top=15):
@@ -99,7 +99,7 @@ def plotar_importancia_features(modelo, feature_names=None, n_top=15):
     plt.figure(figsize=(12, 5))
     plt.bar(range(n_top), importancias[indices], color="steelblue")
     plt.xticks(range(n_top), labels, rotation=45, ha="right")
-    plt.title(f"Top {n_top} Features Mais Importantes — Random Forest")
+    plt.title(f"Top {n_top} Features Mais Importantes - Random Forest")
     plt.xlabel("Feature")
     plt.ylabel("Importância")
     plt.tight_layout()

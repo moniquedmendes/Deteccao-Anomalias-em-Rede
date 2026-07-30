@@ -28,10 +28,12 @@ scikit-learn
 #│   ├── KDDTrain+.txt
 #│   └── KDDTest+.txt
 #│
-#├── main.py               ← orquestra tudo (chama os módulos)
-#├── preprocessamento.py   ← limpeza e preparação (seu código atual)
-#├── random_forest.py      ← modelo supervisionado
-#├── isolation_forest.py   ← modelo não supervisionado
-#├── modelo_hibrido.py     ← combinação dos dois
-#├── avaliacao.py          ← métricas, gráficos, relatório
-#└── resultados/           ← pasta para salvar gráficos e outputs
+#├── main.py               - orquestra tudo (chama os módulos)
+#├── preprocessamento.py   - limpeza e preparação (seu código atual)
+#├── random_forest.py      - modelo supervisionado
+#├── isolation_forest.py   - modelo não supervisionado
+#├── modelo_hibrido.py     - combinação dos dois
+#├── avaliacao.py          - métricas, gráficos, relatório
+#└── resultados/           - pasta para salvar gráficos e outputs
+
+#AJUSTAR TUDO ISSO!

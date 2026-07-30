@@ -31,3 +31,7 @@ y_pred_hibrido, metricas_hibrido = treinar_modelo_hibrido(
     y_pred_rf, escores_if, y_teste,
     threshold=-0.45   # ajustar conforme análise acima
 )
+
+#Separar os dois modelos, talvez de para rodar TUDO de uma vez o que não faz tanto sentido
+#já que estamos fazendo testes e relatorios separados, acho que assim fica mais facil
+#para analizar

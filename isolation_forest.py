@@ -44,7 +44,7 @@ def treinar_isolation_forest(X_treino, X_teste, y_teste,
     # ======================================
     # 1. INSTANCIAR E TREINAR O MODELO
     # ======================================
-    # Importante: o IF treina SEM y_treino — ele aprende
+    # Importante: o IF treina SEM y_treino, ele aprende afinal é um algoritmo nao supervisionado
     # apenas o padrão dos dados, sem saber o que é ataque
 
     modelo = IsolationForest(
@@ -55,7 +55,7 @@ def treinar_isolation_forest(X_treino, X_teste, y_teste,
     )
 
     print(f"\nTreinando com contamination={contamination}...")
-    modelo.fit(X_treino)       # ← sem y_treino aqui
+    modelo.fit(X_treino)       # sem y_treino aqui
     print("Treinamento concluído.")
 
     # ======================================
@@ -63,7 +63,7 @@ def treinar_isolation_forest(X_treino, X_teste, y_teste,
     # ======================================
     # O IF retorna:  1 = normal  |  -1 = anomalia
     # Nosso padrão:  0 = normal  |   1 = ataque
-    # Precisamos converter para manter consistência com o RF
+    # Precisamos converter para manter consistência com o RF!! nao esquecer disso
 
     predicoes_raw = modelo.predict(X_teste)
     y_pred = np.where(predicoes_raw == 1, 0, 1)
@@ -103,7 +103,7 @@ def treinar_isolation_forest(X_treino, X_teste, y_teste,
 
 
 # ======================================
-# GRÁFICO — MATRIZ DE CONFUSÃO
+# GRÁFICO - MATRIZ DE CONFUSÃO
 # ======================================
 
 def plotar_matriz_confusao(y_teste, y_pred):
@@ -114,7 +114,7 @@ def plotar_matriz_confusao(y_teste, y_pred):
     sns.heatmap(cm, annot=True, fmt="d", cmap="Blues",
                 xticklabels=["Normal", "Ataque"],
                 yticklabels=["Normal", "Ataque"])
-    plt.title("Matriz de Confusão — Isolation Forest")
+    plt.title("Matriz de Confusão - Isolation Forest")
     plt.xlabel("Classe Prevista")
     plt.ylabel("Classe Real")
     plt.tight_layout()
@@ -126,7 +126,7 @@ def plotar_matriz_confusao(y_teste, y_pred):
 
 
 # ======================================
-# GRÁFICO — DISTRIBUIÇÃO DOS ESCORES
+# GRÁFICO - DISTRIBUIÇÃO DOS ESCORES
 # ======================================
 
 def plotar_escores_anomalia(escores, y_teste):
@@ -142,7 +142,7 @@ def plotar_escores_anomalia(escores, y_teste):
     plt.hist(escores[y_teste == 1], bins=60, alpha=0.6,
              color="tomato", label="Ataque")
 
-    plt.title("Distribuição dos Escores de Anomalia — Isolation Forest")
+    plt.title("Distribuição dos Escores de Anomalia - Isolation Forest")
     plt.xlabel("Escore de Anomalia (quanto menor, mais suspeito)")
     plt.ylabel("Quantidade de Registros")
     plt.legend()

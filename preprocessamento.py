@@ -46,7 +46,7 @@ def carregar_e_preparar(test_size=0.2, random_state=42):
     print(sorted(dados["classe"].unique()))
 
     # ======================================
-    # 3. EXTRAIR RÓTULO — ANTES DE QUALQUER ENCODING
+    # 3. EXTRAIR RÓTULO - ANTES DE QUALQUER ENCODING
     # ======================================
     y = dados["classe"].apply(
         lambda x: 0 if str(x).strip().lower() == "normal" else 1
@@ -99,8 +99,8 @@ def carregar_e_preparar(test_size=0.2, random_state=42):
     )
 
     print(f"\nTreino: {X_treino.shape} | Teste: {X_teste.shape}")
-    print(f"Distribuição treino — Normal: {sum(y_treino==0)} | Ataque: {sum(y_treino==1)}")
-    print(f"Distribuição teste  — Normal: {sum(y_teste==0)}  | Ataque: {sum(y_teste==1)}")
+    print(f"Distribuição treino - Normal: {sum(y_treino==0)} | Ataque: {sum(y_treino==1)}")
+    print(f"Distribuição teste  - Normal: {sum(y_teste==0)}  | Ataque: {sum(y_teste==1)}")
 
     return X_treino, X_teste, y_treino, y_teste, feature_names
 
@@ -144,7 +144,7 @@ def carregar_e_preparar_unsw(test_size=0.2, random_state=42):
     # 4. SEPARAR FEATURES
     # ======================================
     # Remover: id (identificador), attack_cat (categoria textual),
-    # label (rótulo) — nenhuma dessas é feature de rede
+    # label (rótulo) - nenhuma dessas é feature de rede
     X = dados.drop(["id", "attack_cat", "label"], axis=1)
 
     print(f"\nFeatures utilizadas: {X.shape[1]}")
@@ -189,7 +189,7 @@ def carregar_e_preparar_unsw(test_size=0.2, random_state=42):
     )
 
     print(f"\nTreino: {X_treino.shape} | Teste: {X_teste.shape}")
-    print(f"Distribuição treino — Normal: {sum(y_treino==0)} | Ataque: {sum(y_treino==1)}")
-    print(f"Distribuição teste  — Normal: {sum(y_teste==0)}  | Ataque: {sum(y_teste==1)}")
+    print(f"Distribuição treino - Normal: {sum(y_treino==0)} | Ataque: {sum(y_treino==1)}")
+    print(f"Distribuição teste  - Normal: {sum(y_teste==0)}  | Ataque: {sum(y_teste==1)}")
 
     return X_treino, X_teste, y_treino, y_teste, feature_names
