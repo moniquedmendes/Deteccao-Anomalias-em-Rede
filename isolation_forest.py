@@ -10,6 +10,10 @@ from sklearn.metrics import (
 )
 import os
 
+
+#aviso/observação: modelo IF pode ser explorado de formas diferentes mas esse dataset é terrivel kk
+
+ 
 # ======================================
 # FUNÇÃO PRINCIPAL
 # ======================================
