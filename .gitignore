@@ -1,0 +1,25 @@
+# Dados
+data/
+
+# Resultados gerados automaticamente
+resultados/
+
+# Cache do Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Ambientes virtuais
+venv/
+env/
+.env
+
+# VS Code
+.vscode/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Arquivos temporários
+*.log
+*.tmp
