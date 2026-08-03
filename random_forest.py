@@ -16,10 +16,10 @@ import os
 
 def treinar_random_forest(X_treino, X_teste, y_treino, y_teste,
                            feature_names=None,        # novo parâmetro
-                           n_estimators=100, random_state=42):
+                           n_estimators=100, random_state=42, nome_dataset="NSL-KDD"):
 
     print("=" * 50)
-    print("RANDOM FOREST * NSL-KDD")
+    print(f"RANDOM FOREST * {nome_dataset}")
     print("=" * 50)
 
     modelo = RandomForestClassifier(

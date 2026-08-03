@@ -19,7 +19,7 @@ import os
 # ======================================
 
 def treinar_isolation_forest(X_treino, X_teste, y_teste,
-                              contamination=0.1, random_state=42):
+                              contamination=0.1, random_state=42, nome_dataset="NSL-KDD"):
     """
     Treina um Isolation Forest e retorna o modelo, predições e métricas.
 
@@ -38,7 +38,7 @@ def treinar_isolation_forest(X_treino, X_teste, y_teste,
     """
 
     print("=" * 50)
-    print("ISOLATION FOREST * NSL-KDD")
+    print(f"ISOLATION FOREST * {nome_dataset}")
     print("=" * 50)
 
     # ======================================

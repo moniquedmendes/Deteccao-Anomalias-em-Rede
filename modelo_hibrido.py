@@ -14,7 +14,7 @@ import os
 # ======================================
 
 def treinar_modelo_hibrido(y_pred_rf, escores_if, y_teste,
-                            threshold=-0.45):
+                            threshold=-0.45, nome_dataset="NSL-KDD"):
     """
     Combina as saídas do Random Forest e do Isolation Forest.
 
@@ -31,7 +31,7 @@ def treinar_modelo_hibrido(y_pred_rf, escores_if, y_teste,
     """
 
     print("=" * 50)
-    print("MODELO HÍBRIDO — NSL-KDD")
+    print(f"MODELO HÍBRIDO * {nome_dataset}")
     print(f"Threshold IF: {threshold}")
     print("=" * 50)
 

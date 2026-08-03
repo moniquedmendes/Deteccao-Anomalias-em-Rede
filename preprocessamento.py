@@ -104,7 +104,9 @@ def carregar_e_preparar(test_size=0.2, random_state=42):
 
     return X_treino, X_teste, y_treino, y_teste, feature_names
 
-
+   # ======================================
+   #
+   # ======================================
 
 def carregar_e_preparar_unsw(test_size=0.2, random_state=42):
     """
