@@ -156,6 +156,7 @@ def carregar_e_preparar_unsw(test_size=0.2, random_state=42):
     # 5. ENCODING DAS COLUNAS CATEGÓRICAS
     # ======================================
     # UNSW-NB15 tem 3 colunas categóricas: proto, service, state
+    #TOMAR CUIDADO COM A VERSÃO DO PANDA, POSSIVEL ERRO POR CAUSA DA INVERSÃO, ISSO NOS DOIS PROCESSAMENTOS QUE TEM!!
     for coluna in X.columns:
         if X[coluna].dtype == "object":
             encoder = LabelEncoder()
@@ -163,7 +164,7 @@ def carregar_e_preparar_unsw(test_size=0.2, random_state=42):
 
     colunas_texto = X.dtypes[X.dtypes == "object"]
     if len(colunas_texto) > 0:
-        print("⚠️  Colunas ainda em texto:", list(colunas_texto.index))
+        print("Colunas ainda em texto:", list(colunas_texto.index))
     else:
         print("\n Todas as colunas convertidas para numérico.")
 
