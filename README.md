@@ -1,7 +1,5 @@
 # Detecção de Anomalias em Tráfego de Rede com Machine Learning
 
-TCC — Ciência da Computação 
-
 ## Datasets
 
 Os datasets não estão incluídos neste repositório por questões de tamanho.
