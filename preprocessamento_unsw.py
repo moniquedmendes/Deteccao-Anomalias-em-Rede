@@ -5,6 +5,30 @@ import numpy as np
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.model_selection import train_test_split
 
+
+def _encode_treino_teste(X_treino, X_teste, colunas_categoricas):
+    """
+    Codifica colunas categóricas com LabelEncoder treinado SOMENTE no treino.
+    Categorias que aparecerem no teste mas não existiam no treino são mapeadas
+    para um código extra "desconhecido" (evita vazamento e evita erro do
+    LabelEncoder com categoria nunca vista).
+    """
+    X_treino = X_treino.copy()
+    X_teste = X_teste.copy()
+
+    for coluna in colunas_categoricas:
+        encoder = LabelEncoder()
+        encoder.fit(X_treino[coluna].astype(str))
+
+        mapa = {classe: codigo for codigo, classe in enumerate(encoder.classes_)}
+        codigo_desconhecido = len(encoder.classes_)  # categoria nova = código extra
+
+        X_treino[coluna] = X_treino[coluna].astype(str).map(mapa)
+        X_teste[coluna] = X_teste[coluna].astype(str).map(mapa).fillna(codigo_desconhecido).astype(int)
+
+    return X_treino, X_teste
+
+
 def carregar_e_preparar_unsw(test_size=0.2, random_state=42):
     """
     Carrega e prepara o dataset UNSW-NB15 para treinamento.
@@ -43,43 +67,22 @@ def carregar_e_preparar_unsw(test_size=0.2, random_state=42):
     # 4. SEPARAR FEATURES
     # ======================================
     # Remover: id (identificador), attack_cat (categoria textual),
-    # label (rótulo) — nenhuma dessas é feature de rede
+    # label (rótulo) nenhuma dessas é feature de rede
     X = dados.drop(["id", "attack_cat", "label"], axis=1)
 
     print(f"\nFeatures utilizadas: {X.shape[1]}")
     print("Colunas:", list(X.columns))
 
-    # ======================================
-    # 5. ENCODING DAS COLUNAS CATEGÓRICAS
-    # ======================================
     # UNSW-NB15 tem 3 colunas categóricas: proto, service, state
-    for coluna in X.columns:
-        if X[coluna].dtype == "object":
-            encoder = LabelEncoder()
-            X[coluna] = encoder.fit_transform(X[coluna].astype(str))
-
-    colunas_texto = X.dtypes[X.dtypes == "object"]
-    if len(colunas_texto) > 0:
-        print(" Colunas ainda em texto:", list(colunas_texto.index))
-    else:
-        print("\n Todas as colunas convertidas para numérico.")
+    colunas_categoricas = [c for c in X.columns if not pd.api.types.is_numeric_dtype(X[c])]
+    print("Colunas categóricas detectadas:", colunas_categoricas)
 
     # ======================================
-    # 6. SALVAR NOMES DAS FEATURES
+    # 5. DIVISÃO TREINO / TESTE (ANTES DO ENCODING E DA NORMALIZAÇÃO)
     # ======================================
-    feature_names = list(X.columns)
-
-    # ======================================
-    # 7. NORMALIZAÇÃO
-    # ======================================
-    scaler = StandardScaler()
-    X = scaler.fit_transform(X)
-
-    print(" Normalização concluída.")
-
-    # ======================================
-    # 8. DIVISÃO TREINO / TESTE
-    # ======================================
+    # O split é feito aqui, com os dados ainda "crus", para que o LabelEncoder
+    # e o StandardScaler sejam ajustados (fit) somente com o treino o
+    # que estatísticas do teste vazem para o pré-processamento.
     X_treino, X_teste, y_treino, y_teste = train_test_split(
         X, y,
         test_size=test_size,
@@ -87,8 +90,33 @@ def carregar_e_preparar_unsw(test_size=0.2, random_state=42):
         stratify=y
     )
 
+    # ======================================
+    # 6. ENCODING DAS COLUNAS CATEGÓRICAS (fit só no treino)
+    # ======================================
+    X_treino, X_teste = _encode_treino_teste(X_treino, X_teste, colunas_categoricas)
+
+    colunas_texto_restantes = [c for c in X_treino.columns if not pd.api.types.is_numeric_dtype(X_treino[c])]
+    if colunas_texto_restantes:
+        print(" Colunas ainda em texto:", colunas_texto_restantes)
+    else:
+        print("\n Todas as colunas convertidas para numérico.")
+
+    # ======================================
+    # 7. SALVAR NOMES DAS FEATURES
+    # ======================================
+    feature_names = list(X_treino.columns)
+
+    # ======================================
+    # 8. NORMALIZAÇÃO (fit só no treino)
+    # ======================================
+    scaler = StandardScaler()
+    X_treino = scaler.fit_transform(X_treino)
+    X_teste = scaler.transform(X_teste)
+
+    print(" Normalização concluída.")
+
     print(f"\nTreino: {X_treino.shape} | Teste: {X_teste.shape}")
-    print(f"Distribuição treino — Normal: {sum(y_treino==0)} | Ataque: {sum(y_treino==1)}")
-    print(f"Distribuição teste  — Normal: {sum(y_teste==0)}  | Ataque: {sum(y_teste==1)}")
+    print(f"Distribuição treino - Normal: {sum(y_treino==0)} | Ataque: {sum(y_treino==1)}")
+    print(f"Distribuição teste  - Normal: {sum(y_teste==0)}  | Ataque: {sum(y_teste==1)}")
 
     return X_treino, X_teste, y_treino, y_teste, feature_names

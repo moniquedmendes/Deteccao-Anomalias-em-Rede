@@ -34,11 +34,12 @@ def treinar_random_forest(X_treino, X_teste, y_treino, y_teste,
 
     y_pred = modelo.predict(X_teste)
 
+    # Adicionei o zero_division para padronizar, mas não é algo que precisava é mais uma medida de segurança 
     metricas = {
         "acuracia" : accuracy_score(y_teste, y_pred),
-        "precisao" : precision_score(y_teste, y_pred),
-        "recall"   : recall_score(y_teste, y_pred),
-        "f1"       : f1_score(y_teste, y_pred)
+        "precisao" : precision_score(y_teste, y_pred, zero_division=0),
+        "recall"   : recall_score(y_teste, y_pred, zero_division=0),
+        "f1"       : f1_score(y_teste, y_pred, zero_division=0)
     }
 
     print("\n--- Resultados ---")

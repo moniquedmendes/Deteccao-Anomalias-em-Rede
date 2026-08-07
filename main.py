@@ -10,7 +10,7 @@ from modelo_hibrido import treinar_modelo_hibrido, analisar_thresholds
 #porem o modelo hibrido deixa tudo que ta nesse codigo pq ele só junta os dois!!!
 
 print("\n" + "=" * 60)
-print("EXPERIMENTOS — NSL-KDD")
+print("EXPERIMENTOS * NSL-KDD")
 print("=" * 60)
 # 1. Preparar dados
 X_treino, X_teste, y_treino, y_teste, feature_names = carregar_e_preparar()
@@ -39,7 +39,7 @@ y_pred_hibrido, metricas_hibrido = treinar_modelo_hibrido(
 
 
 print("\n" + "=" * 60)
-print("EXPERIMENTOS — UNSW-NB15")
+print("EXPERIMENTOS * UNSW-NB15")
 print("=" * 60)
 
 X_treino_u, X_teste_u, y_treino_u, y_teste_u, feature_names_u = carregar_e_preparar_unsw()
