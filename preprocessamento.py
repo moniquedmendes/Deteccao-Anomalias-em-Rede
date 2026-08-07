@@ -183,8 +183,22 @@ def carregar_e_preparar_unsw(test_size=0.2, random_state=42):
     print("Colunas:", list(X.columns))
 
     # UNSW-NB15 tem 3 colunas categóricas: proto, service, state
+<<<<<<< HEAD
     colunas_categoricas = [c for c in X.columns if not pd.api.types.is_numeric_dtype(X[c])]
     print("Colunas categóricas detectadas:", colunas_categoricas)
+=======
+    #TOMAR CUIDADO COM A VERSÃO DO PANDA, POSSIVEL ERRO POR CAUSA DA INVERSÃO, ISSO NOS DOIS PROCESSAMENTOS QUE TEM!!
+    for coluna in X.columns:
+        if X[coluna].dtype == "object":
+            encoder = LabelEncoder()
+            X[coluna] = encoder.fit_transform(X[coluna].astype(str))
+
+    colunas_texto = X.dtypes[X.dtypes == "object"]
+    if len(colunas_texto) > 0:
+        print("Colunas ainda em texto:", list(colunas_texto.index))
+    else:
+        print("\n Todas as colunas convertidas para numérico.")
+>>>>>>> c420f3132513739167c51c92b15c1e38d7489e9d
 
     # ======================================
     # 5. DIVISÃO TREINO / TESTE (ANTES DO ENCODING E DA NORMALIZAÇÃO)
