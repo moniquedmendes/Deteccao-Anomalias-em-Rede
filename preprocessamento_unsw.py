@@ -29,94 +29,65 @@ def _encode_treino_teste(X_treino, X_teste, colunas_categoricas):
     return X_treino, X_teste
 
 
-def carregar_e_preparar_unsw(test_size=0.2, random_state=42):
+def carregar_e_preparar_unsw():
     """
-    Carrega e prepara o dataset UNSW-NB15 para treinamento.
-
-    Retorna:
-        X_treino, X_teste, y_treino, y_teste, feature_names
+    Versão corrigida: carrega treino e teste do UNSW-NB15 separadamente,
+    preservando a divisão original disponibilizada no Kaggle
+    (training-set.csv / testing-set.csv), sem redivisão via train_test_split.
     """
 
     # ======================================
-    # 1. CARREGAR DADOS
+    # 1. CARREGAR — divisão original preservada
     # ======================================
     treino = pd.read_csv("data/UNSW_NB15_training-set.csv")
     teste  = pd.read_csv("data/UNSW_NB15_testing-set.csv")
-    dados  = pd.concat([treino, teste], ignore_index=True)
 
-    print(f"Dataset carregado: {dados.shape}")
+    print(f"Treino original : {treino.shape}")
+    print(f"Teste original  : {teste.shape}")
 
-    # ======================================
-    # 2. DIAGNÓSTICO DO RÓTULO
-    # ======================================
-    print("\nValores únicos em label:", dados["label"].unique())
-    print("Valores únicos em attack_cat:", dados["attack_cat"].unique())
-
-    # ======================================
-    # 3. EXTRAIR RÓTULO
-    # ======================================
-    # Diferente do NSL-KDD, o rótulo já é binário:
-    # 0 = normal | 1 = ataque
-    y = dados["label"].copy()
-
-    print("\nDistribuição das classes:")
-    print(y.value_counts())
-    print(f"Normal: {sum(y==0)} | Ataque: {sum(y==1)}")
+    proporcao_treino = sum(treino["label"] == 1) / len(treino) * 100
+    proporcao_teste  = sum(teste["label"] == 1)  / len(teste)  * 100
+    print(f"Proporção de ataques no treino: {proporcao_treino:.2f}%")
+    print(f"Proporção de ataques no teste : {proporcao_teste:.2f}%")
 
     # ======================================
-    # 4. SEPARAR FEATURES
+    # 2. EXTRAIR RÓTULO — separadamente
     # ======================================
-    # Remover: id (identificador), attack_cat (categoria textual),
-    # label (rótulo) nenhuma dessas é feature de rede
-    X = dados.drop(["id", "attack_cat", "label"], axis=1)
+    y_treino = treino["label"].copy()
+    y_teste  = teste["label"].copy()
 
-    print(f"\nFeatures utilizadas: {X.shape[1]}")
-    print("Colunas:", list(X.columns))
-
-    # UNSW-NB15 tem 3 colunas categóricas: proto, service, state
-    colunas_categoricas = [c for c in X.columns if not pd.api.types.is_numeric_dtype(X[c])]
-    print("Colunas categóricas detectadas:", colunas_categoricas)
+    print(f"\nDistribuição treino — Normal: {sum(y_treino==0)} | Ataque: {sum(y_treino==1)}")
+    print(f"Distribuição teste  — Normal: {sum(y_teste==0)}  | Ataque: {sum(y_teste==1)}")
 
     # ======================================
-    # 5. DIVISÃO TREINO / TESTE (ANTES DO ENCODING E DA NORMALIZAÇÃO)
+    # 3. SEPARAR FEATURES
     # ======================================
-    # O split é feito aqui, com os dados ainda "crus", para que o LabelEncoder
-    # e o StandardScaler sejam ajustados (fit) somente com o treino o
-    # que estatísticas do teste vazem para o pré-processamento.
-    X_treino, X_teste, y_treino, y_teste = train_test_split(
-        X, y,
-        test_size=test_size,
-        random_state=random_state,
-        stratify=y
-    )
+    X_treino = treino.drop(["id", "attack_cat", "label"], axis=1)
+    X_teste  = teste.drop(["id", "attack_cat", "label"],  axis=1)
 
     # ======================================
-    # 6. ENCODING DAS COLUNAS CATEGÓRICAS (fit só no treino)
+    # 4. ENCODING — fit só no treino
     # ======================================
+    colunas_categoricas = [c for c in X_treino.columns
+                           if not pd.api.types.is_numeric_dtype(X_treino[c])]
+    print("\nColunas categóricas:", colunas_categoricas)
+
     X_treino, X_teste = _encode_treino_teste(X_treino, X_teste, colunas_categoricas)
-
-    colunas_texto_restantes = [c for c in X_treino.columns if not pd.api.types.is_numeric_dtype(X_treino[c])]
-    if colunas_texto_restantes:
-        print(" Colunas ainda em texto:", colunas_texto_restantes)
-    else:
-        print("\n Todas as colunas convertidas para numérico.")
+    print("Encoding concluído.")
 
     # ======================================
-    # 7. SALVAR NOMES DAS FEATURES
+    # 5. SALVAR NOMES
     # ======================================
     feature_names = list(X_treino.columns)
 
     # ======================================
-    # 8. NORMALIZAÇÃO (fit só no treino)
+    # 6. NORMALIZAÇÃO — fit só no treino
     # ======================================
     scaler = StandardScaler()
     X_treino = scaler.fit_transform(X_treino)
-    X_teste = scaler.transform(X_teste)
-
-    print(" Normalização concluída.")
+    X_teste  = scaler.transform(X_teste)
+    print("Normalização concluída.")
 
     print(f"\nTreino: {X_treino.shape} | Teste: {X_teste.shape}")
-    print(f"Distribuição treino - Normal: {sum(y_treino==0)} | Ataque: {sum(y_treino==1)}")
-    print(f"Distribuição teste  - Normal: {sum(y_teste==0)}  | Ataque: {sum(y_teste==1)}")
 
     return X_treino, X_teste, y_treino, y_teste, feature_names
