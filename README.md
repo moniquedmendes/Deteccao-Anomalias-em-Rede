@@ -6,13 +6,13 @@ não supervisionadas e híbridas para detectar tráfego de rede anômalo
 
 São avaliados três modelos:
 
-- **Random Forest** (supervisionado) — aprende diretamente com os rótulos
+- **Random Forest** (supervisionado) aprende diretamente com os rótulos
   de ataque/normal.
-- **Isolation Forest** (não supervisionado) — aprende o padrão do tráfego
+- **Isolation Forest** (não supervisionado) aprende o padrão do tráfego
   normal e sinaliza desvios como anomalia. Testado em três variantes de
   treino: *puro* (dados originais, sem filtro), *limpo* (0% de anomalias
   no treino) e *~3% anomalias* (cenário mais realista de produção).
-- **Modelo Híbrido Otimizado** — combina RF + IF. O threshold do IF é
+- **Modelo Híbrido Otimizado** combina RF + IF. O threshold do IF é
   escolhido usando um conjunto de **validação** separado do treino, e só
   é aplicado ao teste uma única vez no final, evitando vazamento de dado.
 
